@@ -1,10 +1,13 @@
-const repoUrl = "https://github.com/ncecere/open-model-gateway";
+const repoUrl = "https://github.com/bitop-dev/open-model-gateway";
 const docsUrl = "https://docs.omg.bitop.dev";
 // Every pinned repository link points at this tag. Check that each path exists
 // before changing it: git ls-tree -r --name-only <tag>
 const releaseTag = "v0.10.0";
 const tag = `${repoUrl}/blob/${releaseTag}`;
 const image = "ghcr.io/ncecere/open-model-gateway";
+// v0.10.0 predates the repository transfer. Its package and signing identity
+// stay under ncecere even though source and release-page URLs now use bitop-dev.
+const releaseSigningRepoUrl = "https://github.com/ncecere/open-model-gateway";
 // From the release's open-model-gateway-<tag>.digest.txt asset.
 const imageDigest = "sha256:77a37910d5af8ef26cdacec1f7dac026ba2aee32d9de8fd8ab30c039adbcdbe6";
 
@@ -19,6 +22,7 @@ export const site = {
     "Open Model Gateway (OMG) is a self-hosted, open-source gateway that puts cloud and self-hosted AI models behind one API, with workspaces, stacked budgets, exact cost accounting, single sign-on and audit.",
   docsUrl,
   repoUrl,
+  currentImageRepository: "ghcr.io/bitop-dev/open-model-gateway",
   version: releaseTag,
   // The release day of `version` (the footer and the sitemap show it). Null
   // until the tag exists; set it the day the release is tagged.
@@ -38,7 +42,7 @@ export const site = {
     tag: releaseTag,
     digest: imageDigest,
     ref: `${image}:${releaseTag}@${imageDigest}`,
-    cosignIdentity: `${repoUrl}/.github/workflows/image.yml@refs/tags/${releaseTag}`,
+    cosignIdentity: `${releaseSigningRepoUrl}/.github/workflows/image.yml@refs/tags/${releaseTag}`,
     cosignIssuer: "https://token.actions.githubusercontent.com",
   },
   licenseUrl: `${tag}/LICENSE`,
@@ -49,5 +53,5 @@ export const site = {
   kubernetesUrl: `${tag}/docs/kubernetes.md`,
   composeUrl: `${tag}/deploy/staging/compose.yaml`,
   inferenceOpenApiUrl: `${tag}/docs/openapi/inference.openapi.json`,
-  websiteRepoUrl: "https://github.com/ncecere/omg-website",
+  websiteRepoUrl: "https://github.com/bitop-dev/omg-website",
 } as const;
