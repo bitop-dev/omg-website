@@ -1,10 +1,12 @@
 # omg-website
 
-The landing page for [Open Model Gateway (OMG)](https://github.com/ncecere/open-model-gateway), a self-hosted, open-source (MIT) gateway that puts cloud and self-hosted AI models behind one OpenAI- and Anthropic-compatible API, with workspaces, stacked budgets, exact cost accounting, single sign-on and audit. The site is served at https://omg.bitop.dev; the documentation lives in its own repository and site, https://docs.omg.bitop.dev.
+The landing page for [Open Model Gateway (OMG)](https://github.com/bitop-dev/open-model-gateway), a self-hosted, open-source (MIT) gateway that puts cloud and self-hosted AI models behind one OpenAI- and Anthropic-compatible API, with workspaces, stacked budgets, exact cost accounting, single sign-on and audit. The site is served at https://omg.bitop.dev; the documentation lives in its own repository and site, https://docs.omg.bitop.dev.
 
 It's one long page plus a 404 page, with no pricing, sign-up, forms, cookies, tracking or third-party requests. The text describes OMG **v0.10.0** (released 2026-11-02, tag `v0.10.0` of the gateway repository) and is checked against that tag's README, `CHANGELOG.md`, `docs/roadmap.md`, `docs/architecture.md`, `docs/releases/` and the feature docs in `docs/`, with UI names from `apps/web/src`. Only shipped behaviour is described as shipped; planned work appears only as planned, as `docs/roadmap.md` lists it.
 
 `lib/site.ts` holds the version, the release day (`null` until the tag exists; the footer and sitemap show it), the version the "What's new" section counts from (`previousVersion`), the release links (GitHub release, changelog, upgrade notes, and the release pages on the docs site), the published image (repository, tag, digest from the release's `open-model-gateway-<tag>.digest.txt` asset, and the cosign certificate identity `.github/workflows/image.yml@refs/tags/<tag>` with the GitHub Actions OIDC issuer) and the repository links, all pinned to the release tag. When moving to a new tag, check that every pinned path exists: `git -C ../open-model-gateway ls-tree -r --name-only <tag>`.
+
+The repositories now live under `bitop-dev` ([gateway transfer #623](https://github.com/bitop-dev/open-model-gateway/issues/623)). Current gateway images publish to `ghcr.io/bitop-dev/open-model-gateway` (`currentImageRepository` in `lib/site.ts`). The featured **v0.10.0** image predates the transfer: keep its `ghcr.io/ncecere/open-model-gateway` reference, digest and `ncecere/open-model-gateway` cosign identity together. Moving a source repository does not move its old container packages or rewrite signatures. Historical licence attribution and shared brand-token provenance remain as written.
 
 **Sections:** hero, the problem, how it works, features, operations, the dashboard (screenshots), what's new, self-host, and open source and project status. "What's new" is a short **themed** summary of everything since `previousVersion` (four themes, each linking its docs page, plus the breaking changes operators must act on when upgrading), not one card per release: fold a new release into the themes and the feature cards rather than adding to a chain.
 
@@ -64,6 +66,7 @@ npm run dev      # http://localhost:3000
 ## Build
 
 ```sh
+npm test
 npm run typecheck
 npm run build    # static export to out/, then scripts/postbuild.mjs
 ```
@@ -80,8 +83,8 @@ npm run docker   # builds the image and serves it on http://127.0.0.1:8080
 
 `.github/workflows/publish.yaml` builds the site on every pull request and push. On `main` it also builds and pushes a multi-arch (linux/amd64, linux/arm64) image, with every action pinned by commit SHA:
 
-- `ghcr.io/ncecere/omg-website:<full commit SHA>`
-- `ghcr.io/ncecere/omg-website:latest`
+- `ghcr.io/bitop-dev/omg-website:<full commit SHA>`
+- `ghcr.io/bitop-dev/omg-website:latest`
 
 The image is nginx serving `out/`:
 
@@ -91,6 +94,8 @@ The image is nginx serving `out/`:
 - caches hashed assets under `/_next/static/` for a year (`immutable`), other assets for an hour, and revalidates pages on every request.
 
 Deployment lives outside this repository. New GHCR packages start private; make the package public, or pull it with a registry credential.
+
+**Homelab handoff:** after this change is merged and the `main` publish succeeds, update the website deployment from `ghcr.io/ncecere/omg-website` to `ghcr.io/bitop-dev/omg-website`, selecting that publish's full commit SHA (or resolved digest). Confirm the new package is public or accessible with the deployment's pull credentials, then check `GET /healthz` and the source links at https://omg.bitop.dev. The old website package stays at its old path; source changes alone do not update the running site.
 
 Dependabot opens one grouped pull request a week each for npm, GitHub Actions and the Docker base images.
 

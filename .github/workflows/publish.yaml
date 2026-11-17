@@ -30,6 +30,9 @@ jobs:
       - name: Install
         run: npm ci --no-audit --no-fund
 
+      - name: Test
+        run: npm test
+
       # next build also type-checks; the postbuild step writes the CSP hashes
       # and fails on any third-party resource.
       - name: Build
@@ -80,5 +83,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/ncecere/omg-website:${{ github.sha }}
-            ghcr.io/ncecere/omg-website:latest
+            ghcr.io/bitop-dev/omg-website:${{ github.sha }}
+            ghcr.io/bitop-dev/omg-website:latest

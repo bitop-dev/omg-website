@@ -6,13 +6,15 @@ import { site } from "@/lib/site";
 
 /*
  * Every claim here is checked against Open Model Gateway v0.10.0 (tag v0.10.0 of
- * github.com/ncecere/open-model-gateway): README.md, CHANGELOG.md,
+ * github.com/bitop-dev/open-model-gateway): README.md, CHANGELOG.md,
  * docs/roadmap.md, docs/architecture.md, docs/kubernetes.md, docs/operations.md,
  * docs/protocol-matrix.md, docs/threat-model.md, docs/releases/v0.6.1.md to
  * v0.10.0.md, and the feature docs in docs/. Keep it that way: shipped behaviour
  * only, and planned work only as planned (docs/roadmap.md). No capacity or
  * throughput numbers belong on this page: there is no certified capacity number
- * yet (steady-load stalls, #132, and failover durability, #149/#391, are open).
+ * yet (https://github.com/bitop-dev/open-model-gateway/issues/132 is open).
+ * Historical failover work: https://github.com/bitop-dev/open-model-gateway/issues/149
+ * and https://github.com/bitop-dev/open-model-gateway/issues/391 are closed.
  */
 
 export default function Home() {
@@ -987,7 +989,7 @@ function WhatsNew() {
 
 /* ------------------------------------------------------------ Self-host */
 
-const quickStart = `git clone https://github.com/ncecere/open-model-gateway.git
+const quickStart = `git clone ${site.repoUrl}.git
 cd open-model-gateway
 python3 scripts/staging.py init     # private secrets
 python3 scripts/staging.py build    # gateway image
@@ -1037,7 +1039,7 @@ function SelfHost() {
             database roles and secrets in files. A helper script runs each step.
           </p>
           <p>
-            Each release also publishes a signed image to <code>ghcr.io/ncecere/open-model-gateway</code>: distroless,
+            New releases publish a signed image to <code>{site.currentImageRepository}</code>: distroless,
             with no shell or package manager, running as a non-root user. Verify it with cosign and set{" "}
             <code>GATEWAY_IMAGE</code> to its digest instead of building.
           </p>
@@ -1068,6 +1070,10 @@ function SelfHost() {
                 in a catalog. Nothing is enabled until you do.
               </li>
             </ol>
+            <p className="text-sm text-brand-muted">
+              The {site.version} release predates the move to bitop-dev. Its image remains at{" "}
+              <code>{site.image.repository}</code> with its original signing identity, as shown below.
+            </p>
             <CodeBlock label={`Verify the ${site.version} image (cosign v3 or newer)`}>{verifyImage}</CodeBlock>
             <CodeBlock label="What the Compose file runs">{composeExcerpt}</CodeBlock>
           </div>

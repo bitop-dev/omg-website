@@ -10,7 +10,7 @@ RUN npm run build
 
 FROM docker.io/library/nginx:1.29.8-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
 
-LABEL org.opencontainers.image.source="https://github.com/ncecere/omg-website" \
+LABEL org.opencontainers.image.source="https://github.com/bitop-dev/omg-website" \
       org.opencontainers.image.description="The Open Model Gateway website (omg.bitop.dev)" \
       org.opencontainers.image.licenses="MIT AND CC-BY-4.0"
 
